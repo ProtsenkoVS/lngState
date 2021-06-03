@@ -1,0 +1,8 @@
+ {int b, e, out; 
+  read b; read e; out:= 0;
+  if (b)
+    if (e)
+      {int i; i:=0; out := 1;
+       while (e-i) {out := out*b; i := i+1} };
+       write out 
+ }

@@ -4,7 +4,7 @@ cabal-version: 1.12
 --
 -- see: https://github.com/sol/hpack
 --
--- hash: 4c97be665c83d073a4d2bcdd6d61a66dc510ff6b1406bc57965cbdb70cca1c0f
+-- hash: 8dac9b272636805b4a6f9a9959ecc930ae75d7125f6d33a24ab9e8289069c26c
 
 name:           lngState
 version:        0.1.0.0
@@ -27,13 +27,19 @@ source-repository head
 
 library
   exposed-modules:
-      Lib
+      Parse
+      Semantics
+      Syntax
   other-modules:
       Paths_lngState
   hs-source-dirs:
       src
   build-depends:
       base >=4.7 && <5
+    , haskeline
+    , optparse-applicative
+    , parsec
+    , transformers
   default-language: Haskell2010
 
 executable lngState-exe
@@ -45,7 +51,11 @@ executable lngState-exe
   ghc-options: -threaded -rtsopts -with-rtsopts=-N
   build-depends:
       base >=4.7 && <5
+    , haskeline
     , lngState
+    , optparse-applicative
+    , parsec
+    , transformers
   default-language: Haskell2010
 
 test-suite lngState-test
@@ -58,5 +68,9 @@ test-suite lngState-test
   ghc-options: -threaded -rtsopts -with-rtsopts=-N
   build-depends:
       base >=4.7 && <5
+    , haskeline
     , lngState
+    , optparse-applicative
+    , parsec
+    , transformers
   default-language: Haskell2010

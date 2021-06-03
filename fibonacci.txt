@@ -1,0 +1,10 @@
+  {int in, out; read in; out := 0; 
+   if (in+1){int f0, f1,c; 
+              f0 := 1; f1 := 1; out := 1; 
+			  if(in-1) 
+                 { c := 1; while (in-c) 
+                     {out := f0 + f1; f0 := f1; f1 := out; c := c+1}
+                 }
+             };
+   write out 
+  } 
