@@ -126,9 +126,6 @@ defin = do reserved "int"
            symbol ";"
            return il
    
----------------------------------------------	
--- Головні функції
----------------------------------------------				
 program :: Parser Stmt 
 program = do spaces
              r <- stmt
@@ -155,11 +152,11 @@ table  = [[op "*" Times E.AssocLeft, op "/" Div E.AssocLeft, op "%" Mod E.AssocL
          ,[op "+" Plus E.AssocLeft, op "-" Minus E.AssocLeft]
          ]
          where
-            op s f assoc = E.Infix (binOp s f) assoc  --(flip Syntax.Infix f)) assoc
+            op s f assoc = E.Infix (binOp s f) assoc  
             binOp s f = P.reservedOp lexer s >> return (Syntax.BinOp f) 
 
 exprL :: Parser Expr
-exprL  = E.buildExpressionParser table factorL   -- <?> "expression"
+exprL  = E.buildExpressionParser table factorL  
 
 stmtL :: Parser Stmt 
 stmtL = (P.reserved lexer "while" >> While <$> P.parens lexer exprL <*> stmtL)
@@ -172,20 +169,17 @@ stmtL = (P.reserved lexer "while" >> While <$> P.parens lexer exprL <*> stmtL)
 definL :: Parser [String] 
 definL = P.reserved lexer "int" *> P.commaSep1 lexer (P.identifier lexer) <* P.symbol lexer ";"
 
----------------------------------------------	
--- Головні функції
----------------------------------------------				
 programL :: Parser Program 
 programL = P.whiteSpace lexer *> stmtL <* eof -- {P.whiteSpace lexer; r <- stmt; eof; return r}
 
-parseSPL :: ParseOpt -> String -> Program  -- ParserO | LibraryO
-parseSPL p s = let r = if p==ParserO then parse program "" s
-                                     else parse programL "" s  
-               in case r of
+parseLS :: ParseOpt -> String -> Program  -- ParserO | LibraryO
+parseLS p s = let r = if p==ParserO then parse program "" s
+                                    else parse programL "" s  
+              in case r of
                  Left _   -> error "Syntax" 
                  Right pr -> pr
 
-parseSPLL :: String -> Program
-parseSPLL s = case parse programL "" s of
-                 Left _  -> error "Syntax"
-                 Right e -> e
+parseLSL :: String -> Program
+parseLSL s = case parse programL "" s of
+               Left _  -> error "Syntax"
+               Right e -> e

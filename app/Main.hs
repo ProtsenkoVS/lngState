@@ -31,32 +31,32 @@ hError :: CE.ErrorCall -> IO()
 hError (CE.ErrorCallWithLocation se _)  = putStrLn se
 
 interpretFull :: ParseOpt -> SemanOpt -> String -> [Integer] -> [Integer]
-interpretFull p s st ix = let pr = parseSPL p st 
+interpretFull p s st ix = let pr = parseLS p st 
                           in  iProgramMain s pr ix
 
 -- only in ghci :for testing 
 interpret :: String -> [Integer] -> [Integer]
-interpret st ix = let pr = parseSPLL st 
+interpret st ix = let pr = parseLSL st 
                   in  iProgramS pr ix   
 
 ------ Робота з параметрами : ВВедення програми + даних --------------------
-workParameters :: String -> ParserResult (ParseOpt,SemanOpt,String,[String])  -- Parameter --Either String (String,String, [Integer])
+workParameters :: String -> ParserResult (ParseOpt,SemanOpt,String,[String])  
 workParameters  str = execParserPure Options.Applicative.defaultPrefs opts (words str) 
     where opts = info (parameters <**> helper)
                  (  fullDesc 
-                 <> progDesc "Interpret SPL"
-                 <> header "lngState-exe - program-interpreter fo SPL")
+                 <> progDesc "Interpret LS"
+                 <> header "lngState-exe - program-interpreter fo LS")
 
 findParameters1 :: String -> Either String (ParseOpt,SemanOpt,String,[Integer])
 findParameters1 str = case workParameters str of 
                         Success (po,so,pr,dx) -> Right (po, so, pr, map read dx)
-                        Failure ps            -> Left (fst (renderFailure ps ""))      --Left (show ps)
+                        Failure ps            -> Left (fst (renderFailure ps ""))      
                         CompletionInvoked _   -> Left "CompletionInvoked"
 
-parameters :: Parser (ParseOpt,SemanOpt,String,[String]) -- Parameter 
-parameters = (,,,)                                       --Parameter 
-   <$> (parserOption <|> libraryOption)               -- parse parameter  
-   <*> (workOption <|> stateOption <|> applicOption)  -- semantics parametr 
+parameters :: Parser (ParseOpt,SemanOpt,String,[String]) 
+parameters = (,,,)                                       
+   <$> (parserOption <|> libraryOption)               
+   <*> (workOption <|> stateOption <|> applicOption)  
    <*> argument str (metavar "FileProgram")
    <*> some (argument str (metavar "DataForProgram..."))   
 
